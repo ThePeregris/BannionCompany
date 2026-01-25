@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: [|cffDAA520B|r]annion Company |cff32CD32Warrior Elite|r
+## Notes: Engine for Elite Warriors (Turtle WoW).
+## Author: Bannion & Gemini (Based on AvatrollFury work!)
+## Version: 1.18.84-Stable
+## Dependencies: UnitXP_SP3_Addon
+
+BannionCompany.lua
