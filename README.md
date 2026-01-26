@@ -1,51 +1,44 @@
-BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)
-Unified Warrior Engine & Satellite Support - 2026
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)  
+## Unified Warrior Engine & Satellite Support - 2026  
 
-TECHNICAL MANIFESTO | BANNION COMPANY
-Version: v1.36.00-ULTIMATE
-Target: Turtle WoW (Client 1.12.1)
-Architecture: Modular Core + Satellite Addons
+## TECHNICAL MANIFESTO | BANNION COMPANY  
+Version: v1.36.00-ULTIMATE  
+Target: Turtle WoW (Client 1.12.1)  
+Architecture: Modular Core + Satellite Addons  
 
-BannionCompany is not merely a collection of macros; it is a Decision Support
-System (DSS). It operates in the abstraction layer between player intent and
-server execution. The v1.36 iteration introduces a Modular Architecture,
-decoupling utility functions from the combat core to maximize processing
-speed and stability.
+BannionCompany is not merely a collection of macros; it is a Decision Support System (DSS). It operates in the abstraction layer between player intent and server execution. The v1.36 iteration introduces a Modular Architecture, decoupling utility functions from the combat core to maximize processing speed and stability.  
 
 =========================================================================
-THE INVISIBLE CORE (BANNION_CORE)
-The Core is the engine's heartbeat. It processes Action Economy on every
-click.
+## THE INVISIBLE CORE (BANNION_CORE)
+The Core is the engine's heartbeat. It processes Action Economy on every click.
 
-Auto-Attack
+Auto-Attack  
 Condition: If attacking=false
 Objective: Iron-Toggle (Prevents white hit loss via accidental double-clicks).
 
-Bloodrage
+Bloodrage  
 Condition: UnitAffectingCombat
 Objective: Stealth Safety (Only triggers if already in combat).
 
-Debuff Scan
+Debuff Scan  
 Condition: GetPlayerBuffTexture
-Objective: Texture Recognition (Identifies specific debuffs like Rend
-or Hamstring via icon texture string matching).
+Objective: Texture Recognition (Identifies specific debuffs like Rend or Hamstring via icon texture string matching).
 
-Racials
+Racials  
 Condition: Dynamic
 Objective: Auto-trigger for Blood Fury, Berserking, or Perception.
 
-FURY MODULE (/BFury) - AGGRESSIVE DUMP
-Optimized for massive Attack Power (AP) scaling and Zero-Waste Rage
-Management.
-Priority Matrix:
-Execute Phase: If TargetHP <= 20%. Interrupts all flows. Forces
-Berserker Stance.
-Stance Enforcement: Ensures Berserker Stance is active.
-Cooldowns: Casts Death Wish if HP > 50%.
-Primary Rotation: Bloodthirst > Whirlwind.
-Rage Dump: If Rage > 35, queues Heroic Strike.
+## FURY MODULE (/BFury) - AGGRESSIVE DUMP
+Optimized for massive Attack Power (AP) scaling and Zero-Waste Rage Management.
 
-ARMS MODULE (/BArms) - TACTICAL BURST
+Priority Matrix:
+Execute Phase: If TargetHP <= 20%. Interrupts all flows. Forces Berserker Stance.  
+Stance Enforcement: Ensures Berserker Stance is active.  
+Cooldowns: Casts Death Wish if HP > 50%.  
+Primary Rotation: Bloodthirst > Whirlwind.  
+Rage Dump: If Rage > 35, queues Heroic Strike.  
+
+## ARMS MODULE (/BArms) - TACTICAL BURST
 Focused on weapon damage maximization and debuff management.
 Priority Matrix:
 Execute Phase: If TargetHP <= 20%. Uses Execute.
@@ -55,64 +48,56 @@ Rend Logic: Scans target for Ability_Gouge texture. If missing &
 HP > 20%, applies Rend.
 Filler: Heroic Strike if Rend is active.
 
-TANK & SURVIVOR PROTOCOLS
-4A. TANK MODULE (/BTank) - THE AGGRO MACHINE
-Auto-Taunt: Scans targettarget. If the mob is NOT looking at you,
-it fires Taunt.
-Shield Slam: Primary threat generator.
-Revenge Priority: Uses Shield Block to force procs, then prioritizes
-Revenge.
-Sunder Spam: Fills empty GCDs.
+## TANK & SURVIVOR PROTOCOLS
+4A. TANK MODULE (/BTank) - THE AGGRO MACHINE  
+Auto-Taunt: Scans targettarget. If the mob is NOT looking at you, it fires Taunt.  
+Shield Slam: Primary threat generator.  
+Revenge Priority: Uses Shield Block to force procs, then prioritizes Revenge.  
+Sunder Spam: Fills empty GCDs.  
 
-4B. SURVIVOR MODULE (/BSurv) - PANIC PROTOCOL
-Primary: Last Stand + Shield Wall (75% Mitigation).
-Secondary: Shield Block (Crush immunity).
-Control: Disarm (Weapon removal) + Thunder Clap (Slow) + Demo Shout.
+4B. SURVIVOR MODULE (/BSurv) - PANIC PROTOCOL  
+Primary: Last Stand + Shield Wall (75% Mitigation).  
+Secondary: Shield Block (Crush immunity).  
+Control: Disarm (Weapon removal) + Thunder Clap (Slow) + Demo Shout.  
 
-OPPORTUNIST ENGINE (/BOpty) - STANCE DANCER
-A context-aware gap closer and combo executor. This is the most complex
-module.
-Entry Logic:
-Range > 10y + Out of Combat -> Charge.
-Range > 10y + In Combat -> Intercept.
+OPPORTUNIST ENGINE (/BOpty) - STANCE DANCER  
+A context-aware gap closer and combo executor. This is the most complex module.  
+Entry Logic:  
+Range > 10y + Out of Combat -> Charge.  
+Range > 10y + In Combat -> Intercept.  
 
-Stance Reset:
-If inside melee range and in Berserker Stance, forces return to
-Battle Stance.
+Stance Reset:  
+If inside melee range and in Berserker Stance, forces return to Battle Stance.  
 
-Overpower:
-Priority #1 once in Battle Stance.
+Overpower:  
+Priority #1 once in Battle Stance.  
 
-Tactical Combo:
-Check Rend? No -> Cast Rend.
-Check Hamstring? No -> Cast Hamstring.
-Have Both? -> Cast Slam.
+Tactical Combo:  
+Check Rend? No -> Cast Rend.  
+Check Hamstring? No -> Cast Hamstring.  
+Have Both? -> Cast Slam.  
 
-SATELLITE MODULES (STANDALONE ADDONS)
-Utility functions have been moved to dedicated addons to reduce Core
-entropy.
+# SATELLITE MODULES (STANDALONE ADDONS)
+Utility functions have been moved to dedicated addons to reduce Core entropy.
 
-[B]annion Nurse (/BNurse)
-Combat State: If in combat, attempts Healing Potion.
-Idle State: Scans bags for the highest tier Bandage available and
-applies it to self.
+## [B]annion Nurse (/BNurse)
+Combat State: If in combat, attempts Healing Potion.  
+Idle State: Scans bags for the highest tier Bandage available and applies it to self.
 
-[B]annion Focus (/BFocus)
-Virtual Memory: Simulates a "Focus" frame (absent in 1.12.1).
-Mouseover: Captures unit name via tooltip hook.
-Assist (/BAssist): Targets the Focus's target.
+## [B]annion Focus (/BFocus)
+Virtual Memory: Simulates a "Focus" frame (absent in 1.12.1).  
+Mouseover: Captures unit name via tooltip hook.  
+Assist (/BAssist): Targets the Focus's target.  
 
-[B]annion Vision (/BVis)
-CVar Injection: Safely injects cameraDistanceMax (50y) and
-nameplateDistance (41y).
-Safety: Uses pcall to prevent Lua errors on clients that lack
-specific CVars.
+## [B]annion Vision (/BVis)
+CVar Injection: Safely injects cameraDistanceMax (50y) and nameplateDistance (41y).
+Safety: Uses pcall to prevent Lua errors on clients that lack specific CVars.
 
-[B]annion Mounts (/BMount)
-Smart Dismount: Detects buff textures to cancel mounts instantly.
-Selector: ALT (Snowball) | SHIFT (Horse) | NONE (Turtle).
+## [B]annion Mounts (/BMount)
+Smart Dismount: Detects buff textures to cancel mounts instantly.  
+Selector: ALT (Snowball) | SHIFT (Horse) | NONE (Turtle).  
 
-SLASH COMMANDS REGISTRY
+# SLASH COMMANDS REGISTRY
 Command   Module   Function
 /BFury    Core     DPS PvE Rotation
 /BArms    Core     DPS PvP / Leveling
@@ -125,14 +110,10 @@ Command   Module   Function
 /BVis     Vision   Fix Camera & Nameplates
 /BMount   Mounts   Mount/Dismount Logic
 
-STABILITY NOTES
-Silent Engine: A sophisticated chat filter intercepts server error
-messages ("Ability is not ready", "Must be in...", etc.) allowing the
-"Fire & Forget" architecture to function without UI spam.
-Anti-Recursion: The system uses isProcessingLog locks to prevent Stack
-Overflows during chat filtering.
-Modular Isolation: A crash in the Mounts module will not affect the
-Combat Core.
+## STABILITY NOTES
+Silent Engine: A sophisticated chat filter intercepts server error messages ("Ability is not ready", "Must be in...", etc.) allowing the "Fire & Forget" architecture to function without UI spam.  
+Anti-Recursion: The system uses isProcessingLog locks to prevent Stack Overflows during chat filtering.  
+Modular Isolation: A crash in the Mounts module will not affect the Combat Core.  
 
 =========================================================================
 INSTRUCOES EM PORTUGUES (PT-BR)
