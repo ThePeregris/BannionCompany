@@ -1,4 +1,4 @@
-# BANNION COMPANY - MODULAR TACTICAL SUITE (v 1.36.00)  
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)  
 ## Unified Warrior Engine & Satellite Support - 2026  
 
 ## TECHNICAL MANIFESTO | BANNION COMPANY  
@@ -117,12 +117,12 @@ Anti-Recursion: The system uses isProcessingLog locks to prevent Stack Overflows
 Modular Isolation: A crash in the Mounts module will not affect the Combat Core.  
 
 =========================================================================
-INSTRUCOES EM PORTUGUES (PT-BR)
+# INSTRUCOES EM PORTUGUES (PT-BR)
 
-BANNION COMPANY - SUITE TATICA MODULAR (v1.36.00)
+## BANNION COMPANY - SUITE TATICA MODULAR (v1.36.00)
 Motor Unificado de Warrior & Suporte Satelite - 2026
 
-MANIFESTO TECNICO | BANNION COMPANY
+## MANIFESTO TECNICO | BANNION COMPANY
 Versao: v1.36.00-ULTIMATE
 Alvo: Turtle WoW (Cliente 1.12.1)
 Arquitetura: Core Modular + Addons Satelites
@@ -134,7 +134,7 @@ Modular, desacoplando funcoes utilitarias do nucleo de combate para
 maximizar a velocidade de processamento e a estabilidade.
 
 =========================================================================
-O NUCLEO INVISIVEL (BANNION_CORE)
+# O NUCLEO INVISIVEL (BANNION_CORE)
 O Core e o coracao do motor. Ele processa a Economia de Acao em cada
 clique.
 
@@ -239,17 +239,18 @@ montarias instantaneamente.
 Seletor: ALT (Snowball) | SHIFT (Cavalo) | NENHUM (Tartaruga).
 
 REGISTRO DE COMANDOS SLASH
-Comando   Modulo   Funcao
-/BFury    Core     Rotacao DPS PvE
-/BArms    Core     DPS PvP / Upar
-/BTank    Core     Aggro & Mitigacao
-/BSurv    Core     Mitigacao de Panico
-/BOpty    Core     Combo Charge/Intercept/Slam
-/BNurse   Nurse    Potion/Ligadura Inteligente
-/BFocus   Focus    Definir Focus Virtual
-/BAssist  Focus    Assistir Focus Virtual
-/BVis     Vision   Corrigir Camera & Nameplates
-/BMount   Mounts   Logica de Montar/Desmontar
+| Comando  |  Modulo  |  Funcao
+|--        |--        |--
+| /BFury   |  Core    |  Rotacao DPS PvE
+| /BArms   |  Core    |  DPS PvP / Upar
+| /BTank   |  Core    |  Aggro & Mitigacao
+| /BSurv   |  Core    |  Mitigacao de Panico
+| /BOpty   |  Core    |  Combo Charge/Intercept/Slam
+| /BNurse  |  Nurse   |  Potion/Ligadura Inteligente
+| /BFocus  |  Focus   |  Definir Focus Virtual
+| /BAssist |  Focus   |  Assistir Focus Virtual
+| /BVis    |  Vision  |  Corrigir Camera & Nameplates
+| /BMount  |  Mounts  |  Logica de Montar/Desmontar
 
 NOTAS DE ESTABILIDADE
 Motor Silencioso: Um filtro de chat sofisticado intercepta mensagens de
