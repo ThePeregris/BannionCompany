@@ -1,7 +1,6 @@
-=============================================================================
-BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)
-Unified Warrior Engine & Satellite Support - 2026
-=============================================================================
+==========================================================================================
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)
+## Unified Warrior Engine & Satellite Support - 2026
 
 # TECHNICAL MANIFESTO | BANNION COMPANY
 
