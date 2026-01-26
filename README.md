@@ -1,4 +1,4 @@
-# BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)  
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v 1.36.00)  
 ## Unified Warrior Engine & Satellite Support - 2026  
 
 ## TECHNICAL MANIFESTO | BANNION COMPANY  
@@ -98,17 +98,18 @@ Smart Dismount: Detects buff textures to cancel mounts instantly.
 Selector: ALT (Snowball) | SHIFT (Horse) | NONE (Turtle).  
 
 # SLASH COMMANDS REGISTRY
-Command   Module   Function
-/BFury    Core     DPS PvE Rotation
-/BArms    Core     DPS PvP / Leveling
-/BTank    Core     Aggro & Mitigation
-/BSurv    Core     Panic Mitigation
-/BOpty    Core     Charge/Intercept/Slam Combo
-/BNurse   Nurse    Smart Potion/Bandage
-/BFocus   Focus    Set Virtual Focus
-/BAssist  Focus    Assist Virtual Focus
-/BVis     Vision   Fix Camera & Nameplates
-/BMount   Mounts   Mount/Dismount Logic
+|-- Command   |-- Module   |-- Function
+|--           |--          |--
+|-- /BFury    |-- Core     |-- DPS PvE Rotation
+|-- /BArms    |-- Core     |-- DPS PvP / Leveling
+|-- /BTank    |-- Core     |-- Aggro & Mitigation
+|-- /BSurv    |-- Core     |-- Panic Mitigation
+|-- /BOpty    |-- Core     |-- Charge/Intercept/Slam Combo
+|-- /BNurse   |-- Nurse    |-- Smart Potion/Bandage
+|-- /BFocus   |-- Focus    |-- Set Virtual Focus
+|-- /BAssist  |-- Focus    |-- Assist Virtual Focus
+|-- /BVis     |-- Vision   |-- Fix Camera & Nameplates
+|-- /BMount   |-- Mounts   |-- Mount/Dismount Logic
 
 ## STABILITY NOTES
 Silent Engine: A sophisticated chat filter intercepts server error messages ("Ability is not ready", "Must be in...", etc.) allowing the "Fire & Forget" architecture to function without UI spam.  
