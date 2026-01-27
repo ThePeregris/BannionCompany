@@ -2,8 +2,7 @@
 ## Title: [|cff00ccffB|r]annion Company |cff32CD32Warrior Elite|r
 ## Notes: Decision Support System for Elite Warriors (Turtle WoW).
 ## Author: Bannion & Gemini (Based on AvatrollFury work!)
-## Version: v2.13
+## Version: 6.00-GOLDEN
 ## Dependencies: UnitXP_SP3_Addon
-
 
 BannionCompany.lua
