@@ -1,15 +1,16 @@
-# BANNION COMPANY - MODULAR TACTICAL SUITE (v9.01)
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v10.1)
 Unified Warrior Engine & Satellite Support - 2026
 <a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
   <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
 </a>
+
 ## TECHNICAL MANIFESTO | BANNION COMPANY
 
-Version: v9.01-ULTIMATE  
+Version: v10.1-TURTLE-WALL  
 Target: Turtle WoW (Client 1.12.1 - Patch 1.17.2+)  
 Architecture: Hybrid Standalone Engine + Dynamic Modules  
 
-BannionCompany is a "Fire & Forget" Decision Support System (DSS). The v9.01 iteration achieves **True Independence**: it no longer requires external libraries to function but will utilize them (UnitXP, ItemRack) if detected for enhanced performance. It features a User-Toggleable Gear Manager to suit both casual play and tactical power-gaming.
+BannionCompany is a "Fire & Forget" Decision Support System (DSS). The v10.1 iteration achieves **True Independence**: it no longer requires external libraries to function but will utilize them (UnitXP, ItemRack) if detected for enhanced performance. It features a User-Toggleable Gear Manager to suit both casual play and tactical power-gaming.
 
 =========================================================================
 
@@ -105,16 +106,16 @@ Bannion Company - Precision is not an option, it's a requirement.
 # INSTRUÇÕES em PT-BR
 ---
 
-# BANNION COMPANY - SUÍTE TÁTICA MODULAR (v9.01)
+# BANNION COMPANY - SUÍTE TÁTICA MODULAR (v10.1)
 Motor Unificado de Guerreiro & Suporte Satélite - 2026
 
 ## MANIFESTO TÉCNICO | BANNION COMPANY
 
-Versão: v9.01-ULTIMATE  
+Versão: v10.1-TURTLE-WALL  
 Alvo: Turtle WoW (Cliente 1.12.1 - Patch 1.17.2+)  
 Arquitetura: Motor Híbrido Standalone + Módulos Dinâmicos  
 
-O BannionCompany é um Sistema de Suporte à Decisão (DSS) do tipo "Dispare e Esqueça". A iteração v9.01 atinge a **Independência Real**: não requer mais bibliotecas externas para funcionar, mas as utilizará (UnitXP, ItemRack) se detectadas para performance aprimorada. Possui um Gerenciador de Equipamentos "User-Toggleable" para atender tanto o jogo casual quanto o "power-gaming" tático.
+O BannionCompany é um Sistema de Suporte à Decisão (DSS) do tipo "Dispare e Esqueça". A iteração v10.1 atinge a **Independência Real**: não requer mais bibliotecas externas para funcionar, mas as utilizará (UnitXP, ItemRack) se detectadas para performance aprimorada. Possui um Gerenciador de Equipamentos "User-Toggleable" para atender tanto o jogo casual quanto o "power-gaming" tático.
 
 =========================================================================
 
