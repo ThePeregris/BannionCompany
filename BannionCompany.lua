@@ -1,7 +1,7 @@
--- [[ BANNION COMPANY v1.36.00-ULTIMATE ]]
--- Final Build: Pure Combat Core | Fully Modular | Lua 1.12.1
+-- [[ BANNION COMPANY v1.37.00-SMOOTH ]]
+-- Final Build: Weapon Swap Fix | Anti-Spam Animation | Buff Aware
 
-BannionPrefix = "|cffDAA520B|r|cff00ff00annion|r|cffdd0000Ultimate|r"
+BannionPrefix = "|cffDAA520B|r|cff00ff00annion|r|cffdd0000Smooth|r"
 local BannionLogFrame = nil
 local isProcessingLog = false 
 
@@ -25,7 +25,7 @@ function BannionLog(msg)
     isProcessingLog = false
 end
 
--- [2. FILTRO DE SILÊNCIO (Silent Engine)]
+-- [2. FILTRO DE SILÊNCIO]
 local function ApplyDeepFilter()
     local block = {"fail", "not ready", "enough rage", "Another action", "range", "No target", "recovered", "Ability", "Must be in", "nothing to attack", "facing", "Unknown unit"}
     for i = 1, 7 do
@@ -46,7 +46,7 @@ local function ApplyDeepFilter()
     end
 end
 
--- [3. COMBAT HOOKS (Iron Toggle)]
+-- [3. COMBAT HOOKS]
 local attacking
 do
     local f = CreateFrame'Frame'
@@ -80,7 +80,7 @@ function Bannion_Ready(spellName)
     return true 
 end
 
--- DETETOR DE DEBUFF (Texture Scan 1.12.1)
+-- DETETOR DE DEBUFF (No Inimigo)
 function Bannion_HasDebuff(texturePartialName)
     for i=1, 16 do
         local texture = UnitDebuff("target", i)
@@ -91,14 +91,31 @@ function Bannion_HasDebuff(texturePartialName)
     return false
 end
 
+-- [NOVO] DETETOR DE BUFF (No Jogador)
+function Bannion_HasBuff(texturePartialName)
+    for i=0, 31 do
+        local texture = GetPlayerBuffTexture(i)
+        if texture and string.find(texture, texturePartialName) then
+            return true
+        end
+    end
+    return false
+end
+
+-- [NOVO] VERIFICA SE TEM OFFHAND EQUIPADA
+function Bannion_HasOffHand()
+    -- GetInventoryItemLink("player", 17) verifica o slot OffHand
+    return GetInventoryItemLink("player", 17) ~= nil
+end
+
 function Bannion_Core()
     if not attacking then AttackTarget() end 
     UIErrorsFrame:Clear()
     _Cast("Victory Rush") 
     
-    -- Bloodrage apenas em combate
     if UnitAffectingCombat("player") then _Cast("Bloodrage") end
     
+    -- Racials apenas se não estiverem ativos (evita spam visual)
     _Cast("Blood Fury"); _Cast("Berserking"); _Cast("Perception")
 end
 
@@ -109,18 +126,35 @@ function BannionFury()
     local thp, hp, rage = Bannion_TargetHP(), Bannion_HP(), UnitMana("player")
     local stance = Bannion_GetStance()
     
+    -- 1. EXECUTE PHASE
     if thp <= 20 then 
         if stance ~= 3 and stance ~= 1 then _Cast("Berserker Stance") end
         _Cast("Execute")
         return
     end
+
+    -- 2. STANCE CHECK
     if stance ~= 3 then _Cast("Berserker Stance"); return end
+
+    -- [CORREÇÃO OFFHAND] 
+    -- Se estiver em Berserker, em Combate, e SEM Offhand, PAUSA para o Outfitter equipar.
+    -- O Outfitter precisa de 1 ciclo sem GCD para equipar o segundo item.
+    if UnitAffectingCombat("player") and not Bannion_HasOffHand() then
+        return -- Não faz nada neste ciclo, deixa o Outfitter trabalhar
+    end
+
+    -- 3. COOLDOWNS
     if hp > 50 then _Cast("Death Wish") end
     
+    -- 4. ROTAÇÃO
     if Bannion_Ready("Bloodthirst") then _Cast("Bloodthirst") end
     if Bannion_Ready("Whirlwind") then _Cast("Whirlwind") end
     if rage > 35 then _Cast("Heroic Strike") end
-    _Cast("Berserker Rage"); _Cast("Battle Shout")
+    
+    _Cast("Berserker Rage")
+    
+    -- [CORREÇÃO TREMIDEIRA] Só casta se não tiver o buff
+    if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
 function BannionArms() 
@@ -140,7 +174,9 @@ function BannionArms()
     
     if not hasRend and thp > 20 then _Cast("Rend") end
     if hasRend then _Cast("Heroic Strike") end
-    _Cast("Battle Shout")
+    
+    -- [CORREÇÃO TREMIDEIRA]
+    if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
 function BannionCrowd() 
@@ -216,6 +252,8 @@ function BannionTank()
     _Cast("Sunder Armor") 
     
     if rage > 20 then _Cast("Demoralizing Shout") end
+    -- Tank não costuma dar Battle Shout em loop, mas se quiseres, descomenta:
+    -- if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
 function BannionSurvivor() 
@@ -246,8 +284,8 @@ SLASH_BLOG1 = "/BLog"; SlashCmdList["BLOG"] = function()
     local exists = false
     for i=1, 7 do if GetChatWindowInfo(i) == "BannionLog" then exists = true break end end
     if not exists then FCF_OpenNewWindow("BannionLog") end
-    BannionLog("System ULTIMATE. Full Modular Suite Active.")
+    BannionLog("System SMOOTH v1.37. Weapon Swap & Animation Fix applied.")
 end
 
 ApplyDeepFilter()
-DEFAULT_CHAT_FRAME:AddMessage(BannionPrefix.." v1.36.00 ULTIMATE Loaded!")
+DEFAULT_CHAT_FRAME:AddMessage(BannionPrefix.." v1.37.00 SMOOTH Loaded!")
