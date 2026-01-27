@@ -1,5 +1,8 @@
 # BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)  
-Unified Warrior Engine & Satellite Support - 2026
+Unified Warrior Engine & Satellite Support - 2026 
+<a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
+  <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
+</a>
 
 ## TECHNICAL MANIFESTO | BANNION COMPANY
 
@@ -252,4 +255,5 @@ Funções utilitárias foram movidas para addons dedicados para reduzir a entrop
 * Isolamento Modular: Um erro crítico no módulo Mounts não afetará o Core de Combate.
 
 =========================================================================
+
 Bannion Company - Precisão não é uma opção, é um requisito.
