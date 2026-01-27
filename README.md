@@ -1,128 +1,103 @@
-# BANNION COMPANY - MODULAR TACTICAL SUITE (v1.36.00)  
-Unified Warrior Engine & Satellite Support - 2026 
+# BANNION COMPANY - MODULAR TACTICAL SUITE (v9.01)
+Unified Warrior Engine & Satellite Support - 2026
 <a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
   <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
 </a>
 
 ## TECHNICAL MANIFESTO | BANNION COMPANY
 
-Version: v1.36.00-ULTIMATE  
+Version: v9.01-ULTIMATE  
 Target: Turtle WoW (Client 1.12.1)  
-Architecture: Modular Core + Satellite Addons  
+Architecture: Hybrid Standalone Engine + Dynamic Modules  
 
-BannionCompany is not merely a collection of macros; it is a Decision Support System (DSS). It operates in the abstraction layer between player intent and server execution. The v1.36 iteration introduces a Modular Architecture, decoupling utility functions from the combat core to maximize processing speed and stability.
+BannionCompany is a "Fire & Forget" Decision Support System (DSS). The v9.01 iteration achieves **True Independence**: it no longer requires external libraries to function but will utilize them (UnitXP, ItemRack) if detected for enhanced performance. It features a User-Toggleable Gear Manager to suit both casual play and tactical power-gaming.
 
 =========================================================================
 
-## 1. THE INVISIBLE CORE (BANNION_CORE)  
-The Core is the engine's heartbeat. It processes Action Economy on every click.  
+## 1. THE HYBRID CORE (BANNION_CORE)
+The Core is the engine's heartbeat. It features a dual-layer processing system.
 
-Auto-Attack  
-Condition: If attacking=false  
-Objective: Iron-Toggle (Prevents white hit loss via accidental double-clicks).  
+**Intelligent Spell Engine** * **Layer A (Native):** Automatically scans the player's spellbook to manage cooldowns without any addons.  
+* **Layer B (UnitXP):** If `UnitXP_SP3` is detected, the core seamlessly switches to it for microsecond-precision tracking.  
 
-Bloodrage  
-Condition: UnitAffectingCombat  
-Objective: Stealth Safety (Only triggers if already in combat).  
+**Chat Filter & Debuff Recognition** * **Silent Mode:** Intercepts system error messages ("Ability not ready", "Spell not learned") to allow clean Cross-Spec execution.  
+* **Texture Recognition:** Identifies specific debuffs (Rend, Hamstring) via icon texture string matching.  
 
-Debuff Scan  
-Condition: GetPlayerBuffTexture  
-Objective: Texture Recognition (Identifies specific debuffs like Rend or Hamstring via icon texture string matching).  
+## 2. CONFIGURATION MODULE (/bannion)
+The Gear Management system is now **OPTIONAL** and protected by a "Feature Flag".
 
-Racials  
-Condition: Dynamic  
-Objective: Auto-trigger for Blood Fury, Berserking, or Perception.  
+* **Default State:** `ItemRack OFF`. The script will NOT attempt to swap weapons. Safe for all users.  
+* **Power User State:** `ItemRack ON`. Enables tactical weapon swapping based on Stance.  
+* **Commands:** * `/bannion itemrack on` - Enables the swapper (Requires sets: TH, DW, WS).  
+    * `/bannion itemrack off` - Disables the swapper.  
+    * `/bannion status` - Checks current configuration.  
 
-## 2. FURY MODULE (/BFury) - AGGRESSIVE DUMP
-Optimized for massive Attack Power (AP) scaling and Zero-Waste Rage Management.  
+## 3. FURY MODULE (/BFury) - CROSS-SPEC ADAPTIVE
+Works for Deep Fury, Deep Arms, and Hybrids. Adapts to current stance and weapon.
 
-Priority Matrix:  
-1. Execute Phase: If TargetHP <= 20%. Interrupts all flows. Forces Berserker Stance.  
-2. Stance Enforcement: Ensures Berserker Stance is active.  
-3. Cooldowns: Casts Death Wish if HP > 50%.  
-4. Primary Rotation: Bloodthirst > Whirlwind.  
-5. Rage Dump: If Rage > 35, queues Heroic Strike.  
+**Priority Matrix:** 1.  **Execute Phase:** Interrupts all flows.  
+2.  **Stance:** Enforces Berserker Stance.  
+3.  **Adaptive Gear Logic:** * If Config ON: Swaps to Dual Wield (DW). Uses Hamstring to mask GCD.  
+    * If Config OFF: Uses current weapon.  
+4.  **Cross-Spec Nuke:** Checks `Bloodthirst`. If missing, falls back to `Mortal Strike`.  
+5.  **Turtle Meta:** Uses `Victory Rush` and `Master Strike` (if talented).  
+6.  **Smart Filler:** * If 2H Weapon: Uses `Slam` (Higher DPR).  
+    * If Dual Wield: Uses `Heroic Strike` (Dump).  
 
-## 3. ARMS MODULE (/BArms) - TACTICAL BURST  
-Focused on weapon damage maximization and debuff management.  
+## 4. ARMS MODULE (/BArms) - TURTLE META
+Optimized for the specific mechanics of Turtle WoW (1.0s Slam, Master Strike).
 
-Priority Matrix:  
-1. Execute Phase: If TargetHP <= 20%. Uses Execute.  
-2. Mortal Strike: Primary damage dealer.  
-3. Overpower: "Fire & Forget" logic. If available, it fires instantly.  
-4. Rend Logic: Scans target for Ability_Gouge texture. If missing & HP > 20%, applies Rend.  
-5. Filler: Heroic Strike if Rend is active.  
+**Priority Matrix:** 1.  **Execute Phase:** Enforces Battle Stance if equipped with Shield.  
+2.  **Stance:** Enforces Battle Stance.  
+3.  **Cross-Spec Nuke:** Checks `Mortal Strike`. If missing, falls back to `Bloodthirst`.  
+4.  **Utility Ace:** Uses `Master Strike` (Instant Cast / CC) to fill gaps.  
+5.  **Reactive:** `Overpower` is Priority #1 if available.  
+6.  **Turtle Filler:** Uses `Slam` (1.0s cast) whenever Rage > 20. Superior to Heroic Strike.  
 
-## 4. TANK & SURVIVOR PROTOCOLS  
+## 5. TANK & SURVIVOR PROTOCOLS
 
-_4A. TANK MODULE (/BTank) - THE AGGRO MACHINE_  
-* Auto-Taunt: Scans targettarget. If the mob is NOT looking at you, it fires Taunt.  
-* Shield Slam: Primary threat generator.  
-* Revenge Priority: Uses Shield Block to force procs, then prioritizes Revenge.  
-* Sunder Spam: Fills empty GCDs.  
+_5A. TANK MODULE (/BTank)_  
+* **Smart Equip:** Equips Shield only if ItemRack Module is ON.  
+* **Auto-Taunt:** Scans targettarget. If the mob is NOT looking at you, it fires Taunt.  
+* **Threat:** Shield Slam > Revenge > Sunder Armor.  
 
-_4B. SURVIVOR MODULE (/BSurv) - PANIC PROTOCOL_  
-* Primary: Last Stand + Shield Wall (75% Mitigation).  
-* Secondary: Shield Block (Crush immunity).  
-* Control: Disarm (Weapon removal) + Thunder Clap (Slow) + Demo Shout.  
+_5B. SURVIVOR MODULE (/BSurv)_  
+* **Mitigation:** Shield Block (Spam) + Disarm.  
+* **Panic:** Last Stand + Shield Wall.  
+* **Debuffs:** Thunder Clap + Demo Shout.  
 
-## 5. OPPORTUNIST ENGINE (/BOpty) - STANCE DANCER
-A context-aware gap closer and combo executor. This is the most complex module.  
+## 6. OPPORTUNIST ENGINE (/BOpty)
+Context-aware gap closer. Now features "Safe-Swap" logic.
 
-1. Entry Logic:  
-* Range > 10y + Out of Combat -> Charge.  
-* Range > 10y + In Combat -> Intercept.  
+1.  **Entry Logic:** * Combat + Range: Intercept (Berserker).  
+    * No Combat + Range: Charge (Battle).  
+2.  **Weapon Management:** * Only forces weapon swaps if `ItemRack Module` is ON.  
+    * Otherwise, respects current equipment.  
+3.  **Tactical Combo:** * Battle Stance: `Overpower` > `Rend` > `Slam`.  
+    * Berserker Stance: `Whirlwind` > `Slam`.  
 
-2. Stance Reset:  
-If inside melee range and in Berserker Stance, forces return to Battle Stance.  
+## 7. SATELLITE MODULES (EXTERNAL SUPPORT)
+*Note: These functions are separate from the BannionCompany Core.*
 
-3. Overpower:  
-Priority #1 once in Battle Stance.  
+* **[B]annion Nurse:** Auto-Potion/Bandage logic.  
+* **[B]annion Focus:** Virtual Focus frame simulation.  
+* **[B]annion Vision:** CVar injection for camera distance.  
+* **[B]annion Mounts:** Smart dismount logic.  
 
-4. Tactical Combo:  
-* Check Rend? No -> Cast Rend.  
-* Check Hamstring? No -> Cast Hamstring.  
-* Have Both? -> Cast Slam.  
-
-## 6. SATELLITE MODULES (STANDALONE ADDONS)
-Utility functions have been moved to dedicated addons to reduce Core entropy.
-
-### [B]annion Nurse (/BNurse)
-* Combat State: If in combat, attempts Healing Potion.  
-* Idle State: Scans bags for the highest tier Bandage available and applies it to self.  
-
-### [B]annion Focus (/BFocus)
-* Virtual Memory: Simulates a "Focus" frame (absent in 1.12.1).  
-* Mouseover: Captures unit name via tooltip hook.  
-* Assist (/BAssist): Targets the Focus's target.  
-
-### [B]annion Vision (/BVis)
-* CVar Injection: Safely injects cameraDistanceMax (50y) and nameplateDistance (41y).  
-* Safety: Uses pcall to prevent Lua errors on clients that lack specific CVars.  
-
-### [B]annion Mounts (/BMount)
-* Smart Dismount: Detects buff textures to cancel mounts instantly.  
-* Selector: ALT (Snowball) | SHIFT (Horse) | NONE (Turtle).  
-
-## 7. SLASH COMMANDS REGISTRY
+## 8. SLASH COMMANDS REGISTRY
 
 | Command   | Module   | Function
-|--			| --	   | --
-| /BFury    | Core     | DPS PvE Rotation
-| /BArms    | Core     | DPS PvP / Leveling
-| /BTank    | Core     | Aggro & Mitigation
-| /BSurv    | Core     | Panic Mitigation
-| /BOpty    | Core     | Charge/Intercept/Slam Combo
-| /BNurse   | Nurse    | Smart Potion/Bandage
-| /BFocus   | Focus    | Set Virtual Focus
-| /BAssist  | Focus    | Assist Virtual Focus
-| /BVis     | Vision   | Fix Camera & Nameplates
-| /BMount   | Mounts   | Mount/Dismount Logic
+|--         | --       | --
+| `/bannion`| Config   | **OPTIONS MENU (New)**
+| `/BFury`  | Core     | Hybrid DPS Rotation
+| `/BArms`  | Core     | Turtle Meta Rotation
+| `/BTank`  | Core     | Aggro & Mitigation
+| `/BSurv`  | Core     | Panic Mitigation
+| `/BOpty`  | Core     | Gap Closer & Combo
 
-# 8. STABILITY NOTES
-* Silent Engine: A sophisticated chat filter intercepts server error messages ("Ability is not ready", "Must be in...", etc.) allowing the "Fire & Forget" architecture to function without UI spam.  
-* Anti-Recursion: The system uses isProcessingLog locks to prevent Stack Overflows during chat filtering.  
-* Modular Isolation: A crash in the Mounts module will not affect the Combat Core.
+# 9. STABILITY NOTES
+* **Cross-Spec Resilience:** The engine now checks `If Spell A exists, cast A, else cast B`. A Fury warrior can use `/BArms` and it will correctly use Bloodthirst instead of failing on Mortal Strike.  
+* **Dependency Free:** The addon runs purely on the WoW API. `ItemRack` and `UnitXP` are treated as optional enhancements, not requirements.  
 
 =========================================================================
 Bannion Company - Precision is not an option, it's a requirement.
@@ -131,129 +106,103 @@ Bannion Company - Precision is not an option, it's a requirement.
 # INSTRUÇÕES em PT-BR
 ---
 
-# BANNION COMPANY - SUÍTE TÁTICA MODULAR (v1.36.00)  
+# BANNION COMPANY - SUÍTE TÁTICA MODULAR (v9.01)
 Motor Unificado de Guerreiro & Suporte Satélite - 2026
 
 ## MANIFESTO TÉCNICO | BANNION COMPANY
 
-Versão: v1.36.00-ULTIMATE  
+Versão: v9.01-ULTIMATE  
 Alvo: Turtle WoW (Cliente 1.12.1)  
-Arquitetura: Core Modular + Addons Satélites  
+Arquitetura: Motor Híbrido Standalone + Módulos Dinâmicos  
 
-O BannionCompany não é apenas uma coleção de macros; é um Sistema de Suporte à Decisão (DSS). Ele opera na camada de abstração entre a intenção do jogador e a execução do servidor. A iteração v1.36 introduz uma Arquitetura Modular, desacoplando funções utilitárias do núcleo de combate para maximizar a velocidade de processamento e a estabilidade.
+O BannionCompany é um Sistema de Suporte à Decisão (DSS) do tipo "Dispare e Esqueça". A iteração v9.01 atinge a **Independência Real**: não requer mais bibliotecas externas para funcionar, mas as utilizará (UnitXP, ItemRack) se detectadas para performance aprimorada. Possui um Gerenciador de Equipamentos "User-Toggleable" para atender tanto o jogo casual quanto o "power-gaming" tático.
 
 =========================================================================
 
-## 1. O NÚCLEO INVISÍVEL (BANNION_CORE)  
-O Core é o coração do motor. Ele processa a Economia de Ação em cada clique.  
+## 1. O NÚCLEO HÍBRIDO (BANNION_CORE)
+O Core é o coração do motor. Possui um sistema de processamento de camada dupla.
 
-Auto-Ataque  
-Condição: Se attacking=false  
-Objetivo: Iron-Toggle (Previne a perda de "white hits" por cliques duplos acidentais).  
+**Motor de Magia Inteligente** * **Camada A (Nativa):** Escaneia automaticamente o grimório do jogador para gerenciar cooldowns sem addons.  
+* **Camada B (UnitXP):** Se `UnitXP_SP3` for detectado, o core muda para ele para rastreamento de precisão de microssegundos.  
 
-Bloodrage  
-Condição: UnitAffectingCombat  
-Objetivo: Segurança de Stealth (Só dispara se já estiver em combate).  
+**Filtro de Chat & Reconhecimento** * **Modo Silencioso:** Intercepta mensagens de erro do sistema ("Habilidade não pronta", "Magia não aprendida") para permitir execução Cross-Spec limpa.  
+* **Reconhecimento de Textura:** Identifica debuffs específicos (Rend, Hamstring) via correspondência de string de textura do ícone.  
 
-Escaneamento de Debuff  
-Condição: GetPlayerBuffTexture  
-Objetivo: Reconhecimento de Textura (Identifica debuffs específicos como Rend ou Hamstring via correspondência de string de textura do ícone).  
+## 2. MÓDULO DE CONFIGURAÇÃO (/bannion)
+O sistema de Gestão de Equipamentos agora é **OPCIONAL** e protegido por um "Interruptor".
 
-Raciais  
-Condição: Dinâmico  
-Objetivo: Auto-disparo para Blood Fury, Berserking ou Perception.  
+* **Estado Padrão:** `ItemRack OFF`. O script NÃO tentará trocar armas. Seguro para todos os usuários.  
+* **Estado Power User:** `ItemRack ON`. Habilita troca tática de armas baseada na Postura.  
+* **Comandos:** * `/bannion itemrack on` - Ativa o trocador (Requer sets: TH, DW, WS).  
+    * `/bannion itemrack off` - Desativa o trocador.  
+    * `/bannion status` - Verifica a configuração atual.  
 
-## 2. MÓDULO FURY (/BFury) - DESCARGA AGRESSIVA
-Otimizado para escala massiva de Poder de Ataque (AP) e Gestão de Raiva "Zero-Desperdício".  
+## 3. MÓDULO FURY (/BFury) - CROSS-SPEC ADAPTATIVO
+Funciona para Deep Fury, Deep Arms e Híbridos. Adapta-se à postura e arma atual.
 
-Matriz de Prioridade:  
-1. Fase Execute: Se HP do Alvo <= 20%. Interrompe todos os fluxos. Força Postura Berserker.  
-2. Reforço de Postura: Garante que a Postura Berserker está ativa.  
-3. Cooldowns: Usa Death Wish se HP > 50%.  
-4. Rotação Primária: Bloodthirst > Whirlwind.  
-5. Descarga de Raiva: Se Raiva > 35, enfileira Heroic Strike.  
+**Matriz de Prioridade:** 1.  **Fase Execute:** Interrompe todos os fluxos.  
+2.  **Postura:** Força Postura Berserker.  
+3.  **Lógica Adaptativa de Gear:** * Se Config ON: Troca para Dual Wield (DW). Usa Hamstring para mascarar o GCD.  
+    * Se Config OFF: Usa a arma atual.  
+4.  **Nuke Cross-Spec:** Checa `Bloodthirst`. Se ausente, recorre ao `Mortal Strike`.  
+5.  **Turtle Meta:** Usa `Victory Rush` e `Master Strike` (se tiver talento).  
+6.  **Filler Inteligente:** * Se Arma 2H: Usa `Slam` (Maior Dano por Raiva).  
+    * Se Dual Wield: Usa `Heroic Strike` (Dump).  
 
-## 3. MÓDULO ARMS (/BArms) - BURST TÁTICO  
-Focado na maximização de dano da arma e gestão de debuffs.  
+## 4. MÓDULO ARMS (/BArms) - TURTLE META
+Otimizado para as mecânicas específicas do Turtle WoW (Slam 1.0s, Master Strike).
 
-Matriz de Prioridade:  
-1. Fase Execute: Se HP do Alvo <= 20%. Usa Execute.  
-2. Mortal Strike: Principal causador de dano.  
-3. Overpower: Lógica "Dispare e Esqueça". Se disponível, dispara instantaneamente.  
-4. Lógica Rend: Escaneia o alvo pela textura Ability_Gouge. Se ausente & HP > 20%, aplica Rend.  
-5. Filler: Heroic Strike se Rend estiver ativo.  
+**Matriz de Prioridade:** 1.  **Fase Execute:** Força Postura de Batalha se estiver de escudo.  
+2.  **Postura:** Força Postura de Batalha.  
+3.  **Nuke Cross-Spec:** Checa `Mortal Strike`. Se ausente, recorre ao `Bloodthirst`.  
+4.  **Utility Ace:** Usa `Master Strike` (Instant Cast / CC) para preencher lacunas.  
+5.  **Reativo:** `Overpower` é Prioridade #1 se disponível.  
+6.  **Turtle Filler:** Usa `Slam` (cast de 1.0s) sempre que Raiva > 20. Superior ao Heroic Strike.  
 
-## 4. PROTOCOLOS TANK & SURVIVOR  
+## 5. PROTOCOLOS TANK & SURVIVOR
 
-_4A. MÓDULO TANK (/BTank) - A MÁQUINA DE AGGRO_  
-* Auto-Taunt: Escaneia targettarget. Se o mob NÃO estiver olhando para você, dispara Taunt.  
-* Shield Slam: Gerador primário de ameaça.  
-* Prioridade Revenge: Usa Shield Block para forçar procs, depois prioriza Revenge.  
-* Sunder Spam: Preenche GCDs vazios.  
+_5A. MÓDULO TANK (/BTank)_  
+* **Smart Equip:** Equipa Escudo apenas se o Módulo ItemRack estiver ON.  
+* **Auto-Taunt:** Escaneia targettarget. Se o mob NÃO estiver olhando para você, dispara Taunt.  
+* **Ameaça:** Shield Slam > Revenge > Sunder Armor.  
 
-_4B. MÓDULO SURVIVOR (/BSurv) - PROTOCOLO DE PÂNICO_  
-* Primário: Last Stand + Shield Wall (75% Mitigação).  
-* Secundário: Shield Block (Imunidade a Crushing Blows).  
-* Controle: Disarm (Remover arma) + Thunder Clap (Lentidão) + Demo Shout.  
+_5B. MÓDULO SURVIVOR (/BSurv)_  
+* **Mitigação:** Shield Block (Spam) + Disarm.  
+* **Pânico:** Last Stand + Shield Wall.  
+* **Debuffs:** Thunder Clap + Demo Shout.  
 
-## 5. MOTOR OPORTUNISTA (/BOpty) - DANÇA DE POSTURAS
-Um executor de combos e encurtador de distância consciente do contexto. Este é o módulo mais complexo.  
+## 6. MOTOR OPORTUNISTA (/BOpty)
+Encurtador de distância consciente do contexto. Agora com lógica "Safe-Swap".
 
-1. Lógica de Entrada:  
-* Alcance > 10y + Fora de Combate -> Charge.  
-* Alcance > 10y + Em Combate -> Intercept.  
+1.  **Lógica de Entrada:** * Combate + Alcance: Intercept (Berserker).  
+    * Sem Combate + Alcance: Charge (Batalha).  
+2.  **Gestão de Armas:** * Só força troca de armas se `Módulo ItemRack` estiver ON.  
+    * Caso contrário, respeita o equipamento atual.  
+3.  **Combo Tático:** * Postura de Batalha: `Overpower` > `Rend` > `Slam`.  
+    * Postura Berserker: `Whirlwind` > `Slam`.  
 
-2. Reset de Postura:  
-Se dentro do alcance melee e em Postura Berserker, força o retorno para Postura de Batalha.  
+## 7. MÓDULOS SATÉLITES (SUPORTE EXTERNO)
+*Nota: Estas funções são separadas do Core BannionCompany.*
 
-3. Overpower:  
-Prioridade #1 assim que estiver em Postura de Batalha.  
+* **[B]annion Nurse:** Lógica Auto-Potion/Ligadura.  
+* **[B]annion Focus:** Simulação de frame de Focus virtual.  
+* **[B]annion Vision:** Injeção de CVar para distância de câmera.  
+* **[B]annion Mounts:** Lógica de desmontar inteligente.  
 
-4. Combo Tático:  
-* Checar Rend? Não -> Cast Rend.  
-* Checar Hamstring? Não -> Cast Hamstring.  
-* Tem Ambos? -> Cast Slam.  
-
-## 6. MÓDULOS SATÉLITES (ADDONS INDEPENDENTES)
-Funções utilitárias foram movidas para addons dedicados para reduzir a entropia do Core.
-
-### [B]annion Nurse (/BNurse)
-* Estado de Combate: Se em combate, tenta Healing Potion.  
-* Estado Ocioso: Escaneia bolsas pela ligadura de maior tier disponível e aplica em si mesmo.  
-
-### [B]annion Focus (/BFocus)
-* Memória Virtual: Simula um frame de "Focus" (ausente no 1.12.1).  
-* Mouseover: Captura o nome da unidade via hook no tooltip.  
-* Assist (/BAssist): Seleciona o alvo do Focus.  
-
-### [B]annion Vision (/BVis)
-* Injeção de CVar: Injeta com segurança cameraDistanceMax (50y) e nameplateDistance (41y).  
-* Segurança: Usa pcall para prevenir erros de Lua em clientes que não suportam CVars específicas.  
-
-### [B]annion Mounts (/BMount)
-* Desmontar Inteligente: Detecta texturas de buffs para cancelar montarias instantaneamente.  
-* Seletor: ALT (Snowball) | SHIFT (Cavalo) | NENHUM (Tartaruga).  
-
-## 7. REGISTRO DE COMANDOS SLASH
+## 8. REGISTRO DE COMANDOS SLASH
 
 | Comando   | Módulo   | Função
 |--         | --       | --
-| /BFury    | Core     | Rotação DPS PvE
-| /BArms    | Core     | DPS PvP / Upar
-| /BTank    | Core     | Aggro & Mitigação
-| /BSurv    | Core     | Mitigação de Pânico
-| /BOpty    | Core     | Combo Charge/Intercept/Slam
-| /BNurse   | Nurse    | Potion/Ligadura Inteligente
-| /BFocus   | Focus    | Definir Focus Virtual
-| /BAssist  | Focus    | Assistir Focus Virtual
-| /BVis     | Vision   | Corrigir Câmera & Nameplates
-| /BMount   | Mounts   | Lógica de Montar/Desmontar
+| `/bannion`| Config   | **MENU DE OPÇÕES (Novo)**
+| `/BFury`  | Core     | Rotação DPS Híbrida
+| `/BArms`  | Core     | Rotação Turtle Meta
+| `/BTank`  | Core     | Aggro & Mitigação
+| `/BSurv`  | Core     | Mitigação de Pânico
+| `/BOpty`  | Core     | Gap Closer & Combo
 
-# 8. NOTAS DE ESTABILIDADE
-* Motor Silencioso: Um filtro de chat sofisticado intercepta mensagens de erro do servidor ("Ability is not ready", "Must be in...", etc.) permitindo que a arquitetura "Fire & Forget" funcione sem spam na UI.  
-* Anti-Recursão: O sistema usa travas isProcessingLog para prevenir Stack Overflows durante a filtragem de chat.  
-* Isolamento Modular: Um erro crítico no módulo Mounts não afetará o Core de Combate.
+# 9. NOTAS DE ESTABILIDADE
+* **Resiliência Cross-Spec:** O motor agora verifica `Se Magia A existe, cast A, senão cast B`. Um guerreiro Fury pode usar `/BArms` e ele usará corretamente Bloodthirst em vez de falhar no Mortal Strike.  
+* **Livre de Dependências:** O addon roda puramente na API do WoW. `ItemRack` e `UnitXP` são tratados como melhorias opcionais, não requisitos.  
 
 =========================================================================
-
 Bannion Company - Precisão não é uma opção, é um requisito.
