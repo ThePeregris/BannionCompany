@@ -1,9 +1,9 @@
--- [[ BANNION COMPANY v9.01 - ULTIMATE STANDALONE ]]
--- Target: Turtle WoW (Patch 1.17.2)
+-- [[ BANNION COMPANY v10.1 - TURTLE WALL EDITION ]]
+-- Target: Turtle WoW (Patch 1.17.2+)
 -- Architecture: Hybrid Engine (UnitXP Support + Native Fallback)
--- Language: English (Internal Documentation)
+-- Feature: Smart Tanking (Shield Slam Buff Priority) & Modular Gear Swap
 
-local BannionVersion = "|cffDAA520[BANNION v9.01 - ULTIMATE]|r"
+local BannionVersion = "|cffDAA520[BANNION v10.1 - TURTLE WALL]|r"
 
 -- ============================================================
 -- [STATIC CONFIGURATION] -> EDIT SET NAMES HERE
@@ -45,12 +45,10 @@ SlashCmdList["BANNIONCMD"] = function(msg)
 end
 
 -- [3. INTELLIGENT SPELL ENGINE]
--- Cache to store spell IDs so we don't scan the book every frame
 local SpellCache = {}
 
 local function GetSpellID(spellName)
     if SpellCache[spellName] then return SpellCache[spellName] end
-    -- Scan Spellbook
     for i = 1, 200 do
         local n = GetSpellName(i, "spell")
         if not n then break end
@@ -149,7 +147,7 @@ end
 
 -- [6. CORE COMBAT MODULES]
 
--- [[ ARMS MODULE ]]
+-- [[ ARMS MODULE: Turtle Meta ]]
 function BannionArms() 
     if not attacking then AttackTarget() end 
     UIErrorsFrame:Clear()
@@ -181,7 +179,7 @@ function BannionArms()
     if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
--- [[ FURY MODULE ]]
+-- [[ FURY MODULE: Cross-Spec Adaptive ]]
 function BannionFury() 
     if not attacking then AttackTarget() end 
     UIErrorsFrame:Clear() 
@@ -222,7 +220,44 @@ function BannionFury()
     if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
--- [[ OPTY MODULE ]]
+-- [[ TANK MODULE: Shield Slam Priority (Turtle Edition) ]]
+function BannionTank()
+    if not attacking then AttackTarget() end 
+    UIErrorsFrame:Clear()
+    
+    local stance = Bannion_GetStance()
+    local rage = UnitMana("player")
+    
+    -- Stance & Gear
+    if stance ~= 2 then _Cast("Defensive Stance"); Bannion_Equip("WS"); return end
+    if BannionDB.UseItemRack and not Bannion_HasShield() then Bannion_Equip("WS") end
+    
+    -- Survival & Trigger (Off-GCD)
+    _Cast("Shield Block")
+
+    -- Area Control (Works in Def Stance on Turtle)
+    _Cast("Thunder Clap")
+    
+    -- Smart Taunt (Rescue Logic)
+    if UnitExists("targettarget") and not UnitIsUnit("targettarget", "player") then 
+        _Cast("Taunt") 
+    end
+
+    -- Threat Rotation
+    -- [1] Shield Slam: Highest Priority due to Turtle Block Buff + Threat
+    if Bannion_Ready("Shield Slam") then _Cast("Shield Slam") end
+    
+    -- [2] Revenge: Rage Efficient (Reprisal Talent)
+    _Cast("Revenge")
+    
+    -- [3] Sunder Armor: Filler (Low Cost)
+    _Cast("Sunder Armor") 
+    
+    -- Rage Dump (Overflow Protection)
+    if rage > 50 then _Cast("Heroic Strike") end
+end
+
+-- [[ OPTY MODULE: Gap Closer ]]
 function BannionOpty() 
     if not attacking then AttackTarget() end 
     local stance = Bannion_GetStance()
@@ -260,7 +295,7 @@ function BannionOpty()
     end
 end
 
--- [[ SURVIVOR MODULE ]]
+-- [[ SURVIVOR MODULE: Panic Mitigation ]]
 function BannionSurvivor() 
     if not attacking then AttackTarget() end 
     local stance = Bannion_GetStance()
@@ -274,18 +309,7 @@ function BannionSurvivor()
     _Cast("Revenge"); _Cast("Sunder Armor") 
 end
 
--- [[ TANK MODULE ]]
-function BannionTank()
-    if not attacking then AttackTarget() end 
-    local stance = Bannion_GetStance()
-    if stance ~= 2 then _Cast("Defensive Stance"); Bannion_Equip("WS"); return end
-    if BannionDB.UseItemRack and not Bannion_HasShield() then Bannion_Equip("WS") end
-    
-    if UnitExists("targettarget") and not UnitIsUnit("targettarget", "player") then _Cast("Taunt") end
-    _Cast("Shield Block"); _Cast("Shield Slam"); _Cast("Revenge"); _Cast("Sunder Armor") 
-end
-
--- [[ CROWD MODULE ]]
+-- [[ CROWD MODULE: AoE ]]
 function BannionCrowd()
     if not attacking then AttackTarget() end 
      local stance = Bannion_GetStance()
