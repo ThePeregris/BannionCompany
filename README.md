@@ -3,11 +3,10 @@ Unified Warrior Engine & Satellite Support - 2026
 <a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
   <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
 </a>
-
 ## TECHNICAL MANIFESTO | BANNION COMPANY
 
 Version: v9.01-ULTIMATE  
-Target: Turtle WoW (Client 1.12.1)  
+Target: Turtle WoW (Client 1.12.1 - Patch 1.17.2+)  
 Architecture: Hybrid Standalone Engine + Dynamic Modules  
 
 BannionCompany is a "Fire & Forget" Decision Support System (DSS). The v9.01 iteration achieves **True Independence**: it no longer requires external libraries to function but will utilize them (UnitXP, ItemRack) if detected for enhanced performance. It features a User-Toggleable Gear Manager to suit both casual play and tactical power-gaming.
@@ -76,13 +75,17 @@ Context-aware gap closer. Now features "Safe-Swap" logic.
 3.  **Tactical Combo:** * Battle Stance: `Overpower` > `Rend` > `Slam`.  
     * Berserker Stance: `Whirlwind` > `Slam`.  
 
-## 7. SATELLITE MODULES (EXTERNAL SUPPORT)
-*Note: These functions are separate from the BannionCompany Core.*
+## 7. RECOMMENDED TALENTS (TURTLE WOW 1.17.2+)
+Updates for Patch 1.17.2 have significantly changed the Protection tree.  
+**Recommended Build:** 8/5/38 (Deep Mitigation)
 
-* **[B]annion Nurse:** Auto-Potion/Bandage logic.  
-* **[B]annion Focus:** Virtual Focus frame simulation.  
-* **[B]annion Vision:** CVar injection for camera distance.  
-* **[B]annion Mounts:** Smart dismount logic.  
+* **Protection (38):**
+    * **Shield Slam (Row 5):** Moved down, now accessible earlier. Mandatory.  
+    * **Improved Shield Slam (Row 6):** NEW. Essential for Block chance.  
+    * **Reprisal (Row 6):** NEW. Refunds Rage on Revenge. High Priority.  
+    * *Removed:* "Improved Shield Block" and "Improved Sunder Armor" talents no longer exist or are baseline. Do not look for them.  
+* **Arms (8):** Tactical Mastery (5/5) is now Tier 1.  
+* **Fury (5):** Cruelty (5/5).  
 
 ## 8. SLASH COMMANDS REGISTRY
 
@@ -94,10 +97,6 @@ Context-aware gap closer. Now features "Safe-Swap" logic.
 | `/BTank`  | Core     | Aggro & Mitigation
 | `/BSurv`  | Core     | Panic Mitigation
 | `/BOpty`  | Core     | Gap Closer & Combo
-
-# 9. STABILITY NOTES
-* **Cross-Spec Resilience:** The engine now checks `If Spell A exists, cast A, else cast B`. A Fury warrior can use `/BArms` and it will correctly use Bloodthirst instead of failing on Mortal Strike.  
-* **Dependency Free:** The addon runs purely on the WoW API. `ItemRack` and `UnitXP` are treated as optional enhancements, not requirements.  
 
 =========================================================================
 Bannion Company - Precision is not an option, it's a requirement.
@@ -112,7 +111,7 @@ Motor Unificado de Guerreiro & Suporte Satélite - 2026
 ## MANIFESTO TÉCNICO | BANNION COMPANY
 
 Versão: v9.01-ULTIMATE  
-Alvo: Turtle WoW (Cliente 1.12.1)  
+Alvo: Turtle WoW (Cliente 1.12.1 - Patch 1.17.2+)  
 Arquitetura: Motor Híbrido Standalone + Módulos Dinâmicos  
 
 O BannionCompany é um Sistema de Suporte à Decisão (DSS) do tipo "Dispare e Esqueça". A iteração v9.01 atinge a **Independência Real**: não requer mais bibliotecas externas para funcionar, mas as utilizará (UnitXP, ItemRack) se detectadas para performance aprimorada. Possui um Gerenciador de Equipamentos "User-Toggleable" para atender tanto o jogo casual quanto o "power-gaming" tático.
@@ -181,13 +180,17 @@ Encurtador de distância consciente do contexto. Agora com lógica "Safe-Swap".
 3.  **Combo Tático:** * Postura de Batalha: `Overpower` > `Rend` > `Slam`.  
     * Postura Berserker: `Whirlwind` > `Slam`.  
 
-## 7. MÓDULOS SATÉLITES (SUPORTE EXTERNO)
-*Nota: Estas funções são separadas do Core BannionCompany.*
+## 7. TALENTOS RECOMENDADOS (TURTLE WOW 1.17.2+)
+O Patch 1.17.2 alterou significativamente a árvore de Protection.  
+**Build Recomendada:** 8/5/38 (Mitigação Profunda)
 
-* **[B]annion Nurse:** Lógica Auto-Potion/Ligadura.  
-* **[B]annion Focus:** Simulação de frame de Focus virtual.  
-* **[B]annion Vision:** Injeção de CVar para distância de câmera.  
-* **[B]annion Mounts:** Lógica de desmontar inteligente.  
+* **Protection (38):**
+    * **Shield Slam (Linha 5):** Movido para baixo, acessível mais cedo. Obrigatório.  
+    * **Improved Shield Slam (Linha 6):** NOVO. Essencial para chance de Block.  
+    * **Reprisal (Linha 6):** NOVO. Devolve Raiva no Revenge. Alta Prioridade.  
+    * *Removidos:* Talentos "Improved Shield Block" e "Improved Sunder Armor" não existem mais ou são nativos. Não os procure.  
+* **Arms (8):** Tactical Mastery (5/5) agora é Tier 1.  
+* **Fury (5):** Cruelty (5/5).  
 
 ## 8. REGISTRO DE COMANDOS SLASH
 
@@ -199,10 +202,6 @@ Encurtador de distância consciente do contexto. Agora com lógica "Safe-Swap".
 | `/BTank`  | Core     | Aggro & Mitigação
 | `/BSurv`  | Core     | Mitigação de Pânico
 | `/BOpty`  | Core     | Gap Closer & Combo
-
-# 9. NOTAS DE ESTABILIDADE
-* **Resiliência Cross-Spec:** O motor agora verifica `Se Magia A existe, cast A, senão cast B`. Um guerreiro Fury pode usar `/BArms` e ele usará corretamente Bloodthirst em vez de falhar no Mortal Strike.  
-* **Livre de Dependências:** O addon roda puramente na API do WoW. `ItemRack` e `UnitXP` são tratados como melhorias opcionais, não requisitos.  
 
 =========================================================================
 Bannion Company - Precisão não é uma opção, é um requisito.
