@@ -54,8 +54,17 @@ These macros utilize `CastSpellByName` with Lua logic to enable **Mouseover** fu
 /cast Defensive Stance
 /run local u; if UnitIsFriend("player","mouseover") then u="mouseover" elseif UnitIsFriend("player","target") then u="target" else u="targettarget" end; CastSpellByName("Intervene", u)
 ```
----
 
+### F. "The Silencer" (Smart Interrupt)
+**Purpose:** One button to handle all interruption needs based on Gear and Stance. Never put interrupts in auto-rotation scripts; timing is a human decision.
+* **Turtle WoW Update:** Utilizes the fact that *Pummel* is now usable in Battle Stance.
+* **Logic:** * If Defensive Stance OR Shield Equipped -> Casts **Shield Bash**.
+    * If 2H/Dual Wield (Battle/Berserker) -> Casts **Pummel**.
+
+```lua
+/run local _,_,d=GetShapeshiftFormInfo(2); local h=GetInventoryItemLink("player",17); if d or (h and string.find(h,"Shield")) then CastSpellByName("Shield Bash") else CastSpellByName("Pummel") end
+```
+---
 ## 2. RECOMMENDED ADDONS (VISUAL INTELLIGENCE)
 The Bannion script runs the logic, but you need data to make decisions.
 
@@ -172,3 +181,4 @@ Estas macros utilizam lógica Lua para habilitar a funcionalidade **Mouseover** 
     * *Motor:* Aplica Disarm e Demo Shout instantaneamente.
 
 5.  **Vitória:** Jogador retorna ao `/BTank` para finalizar.
+
