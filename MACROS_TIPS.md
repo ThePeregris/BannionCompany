@@ -45,6 +45,15 @@ These macros utilize `CastSpellByName` with Lua logic to enable **Mouseover** fu
 /script UIErrorsFrame:Clear()
 ```
 
+### E. "The Bodyguard" (Smart Intervene)
+**Purpose:** Instantly dash to an ally to intercept the next melee attack. Covers 3 scenarios in one button.
+* **Logic:** Mouseover Ally > Targeted Ally > Target's Target (If targeting an enemy, it saves the enemy's victim).
+* **Stance:** Forces Defensive Stance automatically.
+
+```lua
+/cast Defensive Stance
+/run local u; if UnitIsFriend("player","mouseover") then u="mouseover" elseif UnitIsFriend("player","target") then u="target" else u="targettarget" end; CastSpellByName("Intervene", u)
+```
 ---
 
 ## 2. RECOMMENDED ADDONS (VISUAL INTELLIGENCE)
@@ -124,6 +133,15 @@ Estas macros utilizam lógica Lua para habilitar a funcionalidade **Mouseover** 
 /script UIErrorsFrame:Clear()
 ```
 
+### E. "O Guarda-Costas" (Intervene Inteligente)
+**Purpose:** Instantly dash to an ally to intercept the next melee attack. Covers 3 scenarios in one button.
+* **Logic:** Mouseover Ally > Targeted Ally > Target's Target (If targeting an enemy, it saves the enemy's victim).
+* **Stance:** Forces Defensive Stance automatically.
+
+```lua
+/cast Defensive Stance
+/run local u; if UnitIsFriend("player","mouseover") then u="mouseover" elseif UnitIsFriend("player","target") then u="target" else u="targettarget" end; CastSpellByName("Intervene", u)
+```
 ---
 
 ## 2. ADDONS RECOMENDADOS (INTELIGÊNCIA VISUAL)
@@ -152,4 +170,5 @@ Estas macros utilizam lógica Lua para habilitar a funcionalidade **Mouseover** 
 4.  **Mitigação:** Healer está sofrendo.
     * *Jogador:* Aperta `/BSurv`.
     * *Motor:* Aplica Disarm e Demo Shout instantaneamente.
+
 5.  **Vitória:** Jogador retorna ao `/BTank` para finalizar.
