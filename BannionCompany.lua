@@ -1,27 +1,27 @@
--- [[ BANNION COMPANY v10.2 - MASTER SUITE ]]
+-- [[ BANNION COMPANY v10.2 - COMBAT CORE ]]
+-- Modules: Core, Tank(Wall), Arms(Meta), Fury, Opty, Crowd, Survivor
 -- Target: Turtle WoW (Patch 1.17.2+)
--- Modules: Core, Tank(Wall), Arms(Meta), Fury, Opty, Crowd, Nurse(Smart)
 
-local BannionVersion = "|cffDAA520[BANNION v10.2 - MASTER]|r"
+local BannionVersion = "|cffDAA520[BANNION v10.2 - COMBAT CORE]|r"
 
 -- ============================================================
--- [STATIC CONFIGURATION] -> EDIT SET NAMES HERE
+-- [STATIC CONFIGURATION]
 -- ============================================================
 local BannionSets = {
     TwoHand   = "TH", 
     DualWield = "DW", 
     Shield    = "WS"  
 }
--- ============================================================
 
--- [1. DATABASE & INITIALIZATION]
+-- ============================================================
+-- [1. INITIALIZATION & UTILS]
+-- ============================================================
 local loadFrame = CreateFrame("Frame")
 loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 loadFrame:SetScript("OnEvent", function()
-    if not BannionDB then 
-        BannionDB = { UseItemRack = false } 
-    end
-    -- Initialize Chat Filters
+    if not BannionDB then BannionDB = { UseItemRack = false } end
+    
+    -- Chat Filter (Anti-Spam)
     local block = {
         "fail", "not ready", "enough rage", "Another action", "range", 
         "No target", "recovered", "Ability", "Must be in", "nothing to attack", 
@@ -42,12 +42,11 @@ loadFrame:SetScript("OnEvent", function()
         end
     end
     DEFAULT_CHAT_FRAME:AddMessage(BannionVersion)
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00ccffType /bannion for options.|r")
 end)
 
--- [2. LOCAL UTILS & CACHE]
+-- Spell Cache & Checks
 local SpellCache = {}
-local _Cast = CastSpellByName -- Local definition for speed and scope safety
+local _Cast = CastSpellByName
 
 local function GetSpellID(spellName)
     if SpellCache[spellName] then return SpellCache[spellName] end
@@ -62,6 +61,7 @@ local function GetSpellID(spellName)
     return nil
 end
 
+-- Global Function (Used by other modules if needed)
 function Bannion_Ready(spellName)
     if UnitXP_SP3_Addon and UnitXP_SP3_Addon.SpellReady then
         return UnitXP_SP3_Addon.SpellReady(spellName)
@@ -84,7 +84,6 @@ local function Bannion_Equip(mode)
     end
 end
 
--- Utils for Combat Checks
 local attacking = false
 local f = CreateFrame'Frame'
 f:RegisterEvent'PLAYER_ENTER_COMBAT'; f:RegisterEvent'PLAYER_LEAVE_COMBAT'
@@ -116,10 +115,31 @@ function Bannion_HasBuff(texturePartialName)
 end
 
 -- ============================================================
--- [3. MODULES]
+-- [2. COMBAT MODULES]
 -- ============================================================
 
--- [[ ARMS MODULE: Turtle Meta ]]
+-- [[ TANK: v10.1 Turtle Wall ]]
+function BannionTank()
+    if not attacking then AttackTarget() end 
+    UIErrorsFrame:Clear()
+    local stance = Bannion_GetStance()
+    local rage = UnitMana("player")
+    
+    if stance ~= 2 then _Cast("Defensive Stance"); Bannion_Equip("WS"); return end
+    if BannionDB.UseItemRack and not Bannion_HasShield() then Bannion_Equip("WS") end
+    
+    _Cast("Shield Block"); _Cast("Thunder Clap")
+    
+    if UnitExists("targettarget") and not UnitIsUnit("targettarget", "player") then 
+        _Cast("Taunt") 
+    end
+
+    if Bannion_Ready("Shield Slam") then _Cast("Shield Slam") end
+    _Cast("Revenge"); _Cast("Sunder Armor") 
+    if rage > 50 then _Cast("Heroic Strike") end
+end
+
+-- [[ ARMS: Turtle Meta ]]
 function BannionArms() 
     if not attacking then AttackTarget() end 
     UIErrorsFrame:Clear()
@@ -135,12 +155,9 @@ function BannionArms()
     if stance ~= 1 then _Cast("Battle Stance"); Bannion_Equip("TH"); return end
     if BannionDB.UseItemRack and Bannion_HasOffHand() then Bannion_Equip("TH") end
 
-    -- Overpower logic (Skip if dodge is rare, but safe to keep)
     _Cast("Overpower") 
-    
     if Bannion_Ready("Mortal Strike") then _Cast("Mortal Strike") 
     elseif Bannion_Ready("Bloodthirst") then _Cast("Bloodthirst") end
-    
     if Bannion_Ready("Master Strike") then _Cast("Master Strike") end
 
     local hasRend = false
@@ -152,27 +169,23 @@ function BannionArms()
     if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
--- [[ FURY MODULE: Cross-Spec Adaptive ]]
+-- [[ FURY: Adaptive ]]
 function BannionFury() 
     if not attacking then AttackTarget() end 
     UIErrorsFrame:Clear() 
     local stance = Bannion_GetStance()
     
     if stance ~= 3 then _Cast("Berserker Stance"); Bannion_Equip("DW"); return end
-    
     if BannionDB.UseItemRack then
         if Bannion_HasShield() or not Bannion_HasOffHand() then
             Bannion_Equip("DW")
             if UnitAffectingCombat("player") then _Cast("Bloodrage") end
-            _Cast("Berserker Rage")
-            if UnitMana("player") >= 10 then _Cast("Hamstring") end
+            _Cast("Berserker Rage"); if UnitMana("player") >= 10 then _Cast("Hamstring") end
         end
     end
 
     local thp = UnitHealth("target")/UnitHealthMax("target")*100
-    
-    _Cast("Victory Rush") 
-    _Cast("Blood Fury"); _Cast("Berserking"); _Cast("Perception")
+    _Cast("Victory Rush"); _Cast("Blood Fury"); _Cast("Berserking"); _Cast("Perception")
 
     if thp <= 20 then _Cast("Execute"); return end
     if UnitHealth("player")/UnitHealthMax("player")*100 > 50 then _Cast("Death Wish") end
@@ -183,62 +196,32 @@ function BannionFury()
     if Bannion_Ready("Whirlwind") then _Cast("Whirlwind") end
     if Bannion_Ready("Master Strike") then _Cast("Master Strike") end
     
-    if not Bannion_HasOffHand() then
-        if UnitMana("player") > 20 then _Cast("Slam") end 
-    else
-        if UnitMana("player") > 40 then _Cast("Heroic Strike") end 
-    end
+    if not Bannion_HasOffHand() then if UnitMana("player") > 20 then _Cast("Slam") end 
+    else if UnitMana("player") > 40 then _Cast("Heroic Strike") end end
     
     _Cast("Berserker Rage")
     if not Bannion_HasBuff("BattleShout") then _Cast("Battle Shout") end
 end
 
--- [[ TANK MODULE: Turtle Wall (Shield Slam Priority) ]]
-function BannionTank()
-    if not attacking then AttackTarget() end 
-    UIErrorsFrame:Clear()
-    local stance = Bannion_GetStance()
-    local rage = UnitMana("player")
-    
-    if stance ~= 2 then _Cast("Defensive Stance"); Bannion_Equip("WS"); return end
-    if BannionDB.UseItemRack and not Bannion_HasShield() then Bannion_Equip("WS") end
-    
-    _Cast("Shield Block")
-    _Cast("Thunder Clap")
-    
-    if UnitExists("targettarget") and not UnitIsUnit("targettarget", "player") then 
-        _Cast("Taunt") 
-    end
-
-    -- Priority v10.1: Shield Slam > Revenge > Sunder
-    if Bannion_Ready("Shield Slam") then _Cast("Shield Slam") end
-    _Cast("Revenge")
-    _Cast("Sunder Armor") 
-    
-    if rage > 50 then _Cast("Heroic Strike") end
-end
-
--- [[ CROWD MODULE: The Blender (Sweeping Strikes Fix) ]]
+-- [[ CROWD: The Blender ]]
 function BannionCrowd()
     if not attacking then AttackTarget() end 
     local stance = Bannion_GetStance()
     local rage = UnitMana("player")
     
     if stance == 1 then 
-        _Cast("Sweeping Strikes")
-        _Cast("Thunder Clap")
-        _Cast("Berserker Stance"); Bannion_Equip("TH") -- 2H preferred for WW AoE
+        _Cast("Sweeping Strikes"); _Cast("Thunder Clap")
+        _Cast("Berserker Stance"); Bannion_Equip("TH") 
         return 
     end
     if stance == 3 then 
-        _Cast("Whirlwind")
-        if rage >= 20 then _Cast("Cleave") end
+        _Cast("Whirlwind"); if rage >= 20 then _Cast("Cleave") end
         return
     end
     if stance == 2 then _Cast("Battle Stance"); Bannion_Equip("TH") end
 end
 
--- [[ OPTY MODULE: Gap Closer ]]
+-- [[ OPTY: Gap Closer ]]
 function BannionOpty() 
     if not attacking then AttackTarget() end 
     local stance = Bannion_GetStance()
@@ -255,7 +238,6 @@ function BannionOpty()
         return
     end
     if thp <= 20 then _Cast("Execute"); return end
-
     if BannionDB.UseItemRack and Bannion_HasOffHand() then Bannion_Equip("TH") end
     local hasHam = false
     for i=1,16 do local t = UnitDebuff("target", i); if t and string.find(t, "Ability_ShockWave") then hasHam=true break end end
@@ -274,75 +256,7 @@ function BannionOpty()
     end
 end
 
--- [[ NURSE MODULE: Smart Sustain v10.2 ]]
-local NurseItems = {
-    Potions = { 
-        "Major Healing Potion", "Superior Healing Potion", "Greater Healing Potion", 
-        "Healing Potion", "Lesser Healing Potion", "Minor Healing Potion" 
-    },
-    Stones = { 
-        "Major Healthstone", "Greater Healthstone", "Healthstone", 
-        "Lesser Healthstone", "Minor Healthstone", "Whipper Root Tuber"
-    },
-    Bandages = { 
-        "Heavy Runecloth Bandage", "Runecloth Bandage", "Heavy Mageweave Bandage", 
-        "Mageweave Bandage", "Heavy Silk Bandage", "Silk Bandage", 
-        "Heavy Wool Bandage", "Wool Bandage", "Linen Bandage" 
-    }
-}
-
-local function Bannion_UseItem(name)
-    for bag = 0, 4 do
-        for slot = 1, GetContainerNumSlots(bag) do
-            local link = GetContainerItemLink(bag, slot)
-            if link and string.find(link, name) then
-                local start, duration, enabled = GetContainerItemCooldown(bag, slot)
-                if start == 0 and enabled == 1 then
-                    UseContainerItem(bag, slot)
-                    return true
-                end
-            end
-        end
-    end
-    return false
-end
-
-function BannionNurse()
-    local hp = UnitHealth("player")
-    local max = UnitHealthMax("player")
-    local pct = (hp / max) * 100
-    local combat = UnitAffectingCombat("player")
-    UIErrorsFrame:Clear()
-
-    if combat then
-        if pct > 80 then return end -- v10.2 Threshold
-        for _, item in pairs(NurseItems.Stones) do if Bannion_UseItem(item) then return end end
-        for _, item in pairs(NurseItems.Potions) do if Bannion_UseItem(item) then return end end
-        
-        local race = UnitRace("player")
-        if race == "Undead" and pct < 30 then
-            if not Bannion_Ready("Cannibalize") then return end
-            _Cast("Cannibalize")
-        end
-    else
-        if pct > 90 then return end
-        for i=1,16 do 
-            local t = UnitDebuff("player", i)
-            if t and string.find(t, "Bandage") then 
-                DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Bannion]|r Nurse: Bandage Debuff Active!")
-                return 
-            end 
-        end
-        for _, item in pairs(NurseItems.Bandages) do
-            if Bannion_UseItem(item) then 
-                DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Bannion]|r Nurse: Applying " .. item .. "...")
-                return 
-            end
-        end
-    end
-end
-
--- [[ SURVIVOR MODULE ]]
+-- [[ SURVIVOR ]]
 function BannionSurvivor() 
     if not attacking then AttackTarget() end 
     local stance = Bannion_GetStance()
@@ -354,7 +268,7 @@ function BannionSurvivor()
     _Cast("Revenge"); _Cast("Sunder Armor") 
 end
 
--- [4. SLASH COMMAND REGISTRY]
+-- [3. SLASH COMMANDS]
 SLASH_BANNIONCMD1 = "/bannion"
 SlashCmdList["BANNIONCMD"] = function(msg)
     msg = string.lower(msg)
@@ -378,4 +292,3 @@ SLASH_BCRWD1 = "/BCrwd"; SlashCmdList["BCRWD"] = BannionCrowd
 SLASH_BOPTY1 = "/BOpty"; SlashCmdList["BOPTY"] = BannionOpty
 SLASH_BTANK1 = "/BTank"; SlashCmdList["BTANK"] = BannionTank       
 SLASH_BSURV1 = "/BSurv"; SlashCmdList["BSURV"] = BannionSurvivor
-SLASH_BNURSE1 = "/BNurse"; SlashCmdList["BNURSE"] = BannionNurse
