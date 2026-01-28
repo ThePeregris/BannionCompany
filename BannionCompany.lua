@@ -328,7 +328,7 @@ function BannionCrowd()
         -- Priority #3: Move to Berserker for the big damage
         -- Note: If Sweeping Strikes casts, GCD prevents stance swap (Good).
         -- Press key again to swap.
-        _Cast("Berserker Stance"); Bannion_Equip("DW")
+        _Cast("Berserker Stance"); Bannion_Equip("TH")
         return 
     end
     
@@ -358,4 +358,5 @@ SLASH_BCRWD1 = "/BCrwd"; SlashCmdList["BCRWD"] = BannionCrowd
 SLASH_BOPTY1 = "/BOpty"; SlashCmdList["BOPTY"] = BannionOpty
 SLASH_BTANK1 = "/BTank"; SlashCmdList["BTANK"] = BannionTank       
 SLASH_BSURV1 = "/BSurv"; SlashCmdList["BSURV"] = BannionSurvivor
+
 
