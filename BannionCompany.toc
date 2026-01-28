@@ -2,9 +2,10 @@
 ## Title: [|cff00ccffB|r]annion Company |cff32CD32Warrior Elite|r
 ## Notes: Decision Support System for Elite Warriors (Turtle WoW). /bannion for options.
 ## Author: Bannion & Gemini (Based on AvatrollFury work!)
-## Version: v10.1 - TURTLE WALL ED
+## Version: v10.2 Stable
 ## SavedVariables: BannionDB
 ## OptionalDeps: UnitXP_SP3_Addon, ItemRack
 
 BannionCompany.lua
+
 
