@@ -309,21 +309,53 @@ function BannionSurvivor()
     _Cast("Revenge"); _Cast("Sunder Armor") 
 end
 
--- [[ CROWD MODULE: AoE ]]
+-- [[ CROWD MODULE: THE BLENDER (AoE DPS) ]]
+-- Focus: Sweeping Strikes + Whirlwind Combo
 function BannionCrowd()
     if not attacking then AttackTarget() end 
-     local stance = Bannion_GetStance()
-     if stance == 1 then 
-        _Cast("Thunder Clap"); _Cast("Berserker Stance"); Bannion_Equip("DW")
+    local stance = Bannion_GetStance()
+    local rage = UnitMana("player")
+    
+    -- 1. BATTLE STANCE (Setup Phase)
+    if stance == 1 then 
+        -- Turtle WoW: Sweeping Strikes cost reduced to 20 Rage.
+        -- Priority #1: Activate the cleave buff.
+        _Cast("Sweeping Strikes")
+        
+        -- Priority #2: Apply Slow/Initial Aggro
+        _Cast("Thunder Clap")
+        
+        -- Priority #3: Move to Berserker for the big damage
+        -- Note: If Sweeping Strikes casts, GCD prevents stance swap (Good).
+        -- Press key again to swap.
+        _Cast("Berserker Stance"); Bannion_Equip("DW")
         return 
     end
-     if stance == 3 then _Cast("Whirlwind"); _Cast("Cleave") end
-     _Cast("Thunder Clap")
+    
+    -- 2. BERSERKER STANCE (Execution Phase)
+    if stance == 3 then 
+        -- Priority #1: The Nuke. Hits 4 targets (plus SS procs).
+        _Cast("Whirlwind")
+        
+        -- Priority #2: The Dump. Replaces Auto-Attack to hit 2 targets.
+        if rage >= 20 then _Cast("Cleave") end
+        
+        -- Optional: If Whirlwind is on CD and we have excess rage, keep Cleaving.
+        -- If out of rage, simple auto-attacks build it back up.
+        return
+    end
+    
+    -- 3. DEFENSIVE STANCE (Wrong Place)
+    -- If we are here, we want DPS, not mitigation. Move to Battle to start combo.
+    if stance == 2 then
+        _Cast("Battle Stance"); Bannion_Equip("TH")
+    end
 end
-
+    
 SLASH_BFURY1 = "/BFury"; SlashCmdList["BFURY"] = BannionFury
 SLASH_BARMS1 = "/BArms"; SlashCmdList["BARMS"] = BannionArms
 SLASH_BCRWD1 = "/BCrwd"; SlashCmdList["BCRWD"] = BannionCrowd
 SLASH_BOPTY1 = "/BOpty"; SlashCmdList["BOPTY"] = BannionOpty
 SLASH_BTANK1 = "/BTank"; SlashCmdList["BTANK"] = BannionTank       
 SLASH_BSURV1 = "/BSurv"; SlashCmdList["BSURV"] = BannionSurvivor
+
