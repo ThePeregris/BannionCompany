@@ -45,25 +45,39 @@ These macros utilize `CastSpellByName` with Lua logic to enable **Mouseover** fu
 /script UIErrorsFrame:Clear()
 ```
 
-### E. "The Bodyguard" (Smart Intervene)
-**Purpose:** Instantly dash to an ally to intercept the next melee attack. Covers 3 scenarios in one button.
-* **Logic:** Mouseover Ally > Targeted Ally > Target's Target (If targeting an enemy, it saves the enemy's victim).
-* **Stance:** Forces Defensive Stance automatically.
-
+### E. "The Bodyguard" (Smart Intervene)  
+**Purpose:** Instantly dash to an ally to intercept the next melee attack. Covers 3 scenarios in one button.  
+* **Logic:** Mouseover Ally > Targeted Ally > Target's Target (If targeting an enemy, it saves the enemy's victim).  
+* **Stance:** Forces Defensive Stance automatically.  
+  
 ```lua
 /cast Defensive Stance
 /run local u; if UnitIsFriend("player","mouseover") then u="mouseover" elseif UnitIsFriend("player","target") then u="target" else u="targettarget" end; CastSpellByName("Intervene", u)
 ```
-
-### F. "The Silencer" (Smart Interrupt)
-**Purpose:** One button to handle all interruption needs based on Gear and Stance. Never put interrupts in auto-rotation scripts; timing is a human decision.
-* **Turtle WoW Update:** Utilizes the fact that *Pummel* is now usable in Battle Stance.
-* **Logic:** * If Defensive Stance OR Shield Equipped -> Casts **Shield Bash**.
-    * If 2H/Dual Wield (Battle/Berserker) -> Casts **Pummel**.
-
+  
+**Bannion Operational Tip:** This macro is perfect to use alongside the **/BTank** script.  
+* **Scenario:** You are tanking, but the Boss ignores the taunt and runs toward the Healer.  
+* **Action:** Don't waste time trying to click the Healer. Just keep the Boss targeted and press this macro. You will fly directly to whomever the Boss is chasing. It is instant.  
+  
+---
+  
+### F. "The Silencer" (Smart Interrupt)  
+**Purpose:** One button to handle all interruption needs based on Gear and Stance. Never put interrupts in auto-rotation scripts; timing is a human decision.  
+* **Turtle WoW Update:** Utilizes the fact that *Pummel* is now usable in Battle Stance.  
+* **Logic:**  
+  * If Defensive Stance OR Shield Equipped -> Casts **Shield Bash**.  
+  * If 2H/Dual Wield (Battle/Berserker) -> Casts **Pummel**.  
+  
 ```lua
 /run local _,_,d=GetShapeshiftFormInfo(2); local h=GetInventoryItemLink("player",17); if d or (h and string.find(h,"Shield")) then CastSpellByName("Shield Bash") else CastSpellByName("Pummel") end
 ```
+  
+**Interrupt Operation Summary:** 1. **Tank (Protection):** * You will be equipped with a shield. The macro will always use **Shield Bash**.  
+* **If you have the *Gag Order* talent**, this also silences ranged mages, forcing them to come to you (great for pulling).
+* **DPS (Arms/Fury):**
+  * You will be without a shield. The macro will always use **Pummel**.
+  * Since *Pummel* works in Battle Stance on Turtle WoW, you (Arms) no longer need to switch stances to interrupt. It is instant.  
+
 ---
 ## 2. RECOMMENDED ADDONS (VISUAL INTELLIGENCE)
 The Bannion script runs the logic, but you need data to make decisions.
@@ -142,15 +156,38 @@ Estas macros utilizam lógica Lua para habilitar a funcionalidade **Mouseover** 
 /script UIErrorsFrame:Clear()
 ```
 
-### E. "O Guarda-Costas" (Intervene Inteligente)
-**Purpose:** Instantly dash to an ally to intercept the next melee attack. Covers 3 scenarios in one button.
-* **Logic:** Mouseover Ally > Targeted Ally > Target's Target (If targeting an enemy, it saves the enemy's victim).
-* **Stance:** Forces Defensive Stance automatically.
-
+### E. "O Guarda-Costas" (Smart Intervene)  
+**Propósito:** Voar instantaneamente para um aliado para interceptar o próximo ataque físico. Cobre 3 cenários em um botão.  
+* **Lógica:** Mouseover Aliado > Alvo Aliado > Alvo do Alvo (Se estiver mirando um inimigo, salva a vítima dele).  
+* **Postura:** Força Postura de Defesa automaticamente.  
+  
 ```lua
 /cast Defensive Stance
 /run local u; if UnitIsFriend("player","mouseover") then u="mouseover" elseif UnitIsFriend("player","target") then u="target" else u="targettarget" end; CastSpellByName("Intervene", u)
 ```
+  
+**Dica Operacional Bannion:** Essa macro é perfeita para usar junto com o script **/BTank**.  
+* **Cenário:** Você está tankando, mas o Boss ignora o taunt e corre para o Healer.  
+* **Ação:** Não perca tempo tentando clicar no Healer. Apenas mantenha o Boss no alvo e aperte essa macro. Você vai voar direto para quem o Boss estiver perseguindo. É instantâneo.  
+  
+---
+  
+### F. "O Silenciador" (Smart Interrupt)  
+**Propósito:** Um botão para lidar com todas as necessidades de interrupção baseado em Equipamento e Postura. Nunca coloque interrupções em scripts de rotação automática; o timing é uma decisão humana.  
+* **Atualização Turtle WoW:** Utiliza o fato de que *Pummel* (Murro) agora é utilizável em Postura de Batalha.  
+* **Lógica:**
+  * Se Postura de Defesa OU Escudo Equipado -> Casta **Shield Bash**.  
+  * Se 2H/Dual Wield (Batalha/Berserker) -> Casta **Pummel**.  
+  
+```lua
+/run local _,_,d=GetShapeshiftFormInfo(2); local h=GetInventoryItemLink("player",17); if d or (h and string.find(h,"Shield")) then CastSpellByName("Shield Bash") else CastSpellByName("Pummel") end
+```
+  
+**Resumo da Operação de Interrupção:** 1. **Tank (Proteção):** * Você estará de escudo. A macro sempre usará **Shield Bash**.  
+* **Se você tiver o talento** *Gag Order*, isso também silencia magos à distância, forçando-os a vir até você (ótimo para puxar).  
+* **DPS (Arms/Fury):** * Você estará sem escudo. A macro sempre usará **Pummel**.  
+    * Como no Turtle WoW o *Pummel* funciona em Battle Stance, você (Arms) não precisa mais trocar de postura para interromper. É instantâneo.  
+  
 ---
 
 ## 2. ADDONS RECOMENDADOS (INTELIGÊNCIA VISUAL)
@@ -181,4 +218,8 @@ Estas macros utilizam lógica Lua para habilitar a funcionalidade **Mouseover** 
     * *Motor:* Aplica Disarm e Demo Shout instantaneamente.
 
 5.  **Vitória:** Jogador retorna ao `/BTank` para finalizar.
+  
+=========================================================================  
 
+---  
+**Bannion Company - Precision is not an option, it's a requirement.** 
